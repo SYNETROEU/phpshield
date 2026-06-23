@@ -1,0 +1,5 @@
+C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/CMakeFiles/edit_cache.dir
+C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/CMakeFiles/rebuild_cache.dir
+C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/loader/CMakeFiles/phpshield.dir
+C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/loader/CMakeFiles/edit_cache.dir
+C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/loader/CMakeFiles/rebuild_cache.dir

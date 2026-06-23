@@ -1,0 +1,81 @@
+set(PHP_ROOT "" CACHE PATH "Root directory of a PHP SDK/install tree, useful on Windows")
+
+find_program(PHP_EXECUTABLE NAMES php php8.4 php84 HINTS "${PHP_ROOT}" "${PHP_ROOT}/bin")
+find_program(PHP_CONFIG_EXECUTABLE NAMES php-config php-config8.4 php-config84 HINTS "${PHP_ROOT}" "${PHP_ROOT}/bin")
+
+if(PHP_CONFIG_EXECUTABLE)
+  execute_process(COMMAND ${PHP_CONFIG_EXECUTABLE} --includes OUTPUT_VARIABLE PHP_CONFIG_INCLUDES OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND ${PHP_CONFIG_EXECUTABLE} --extension-dir OUTPUT_VARIABLE PHP_EXTENSION_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND ${PHP_CONFIG_EXECUTABLE} --vernum OUTPUT_VARIABLE PHP_VERSION_NUMBER OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+  separate_arguments(PHP_CONFIG_INCLUDES)
+  foreach(flag ${PHP_CONFIG_INCLUDES})
+    if(flag MATCHES "^-I(.+)")
+      list(APPEND PHP_INCLUDE_DIRS "${CMAKE_MATCH_1}")
+    endif()
+  endforeach()
+elseif(WIN32)
+  find_path(PHP_MAIN_INCLUDE_DIR
+    NAMES main/php.h php.h
+    HINTS "${PHP_ROOT}/include" "${PHP_ROOT}/include/php"
+    PATH_SUFFIXES php main
+  )
+  if(PHP_MAIN_INCLUDE_DIR)
+    if(EXISTS "${PHP_MAIN_INCLUDE_DIR}/main/php.h")
+      set(PHP_INCLUDE_BASE "${PHP_MAIN_INCLUDE_DIR}")
+    elseif(PHP_MAIN_INCLUDE_DIR MATCHES "/main$|\\\\main$")
+      get_filename_component(PHP_INCLUDE_BASE "${PHP_MAIN_INCLUDE_DIR}" DIRECTORY)
+    else()
+      set(PHP_INCLUDE_BASE "${PHP_MAIN_INCLUDE_DIR}")
+    endif()
+    set(PHP_INCLUDE_DIRS
+      "${PHP_INCLUDE_BASE}"
+      "${PHP_INCLUDE_BASE}/main"
+      "${PHP_INCLUDE_BASE}/Zend"
+      "${PHP_INCLUDE_BASE}/TSRM"
+      "${PHP_INCLUDE_BASE}/ext"
+      "${PHP_INCLUDE_BASE}/sapi"
+    )
+  endif()
+  if(PHP_EXECUTABLE)
+    execute_process(COMMAND ${PHP_EXECUTABLE} -i OUTPUT_VARIABLE PHP_INFO_OUTPUT ERROR_QUIET)
+    if(PHP_INFO_OUTPUT MATCHES "Thread Safety => enabled")
+      set(PHP_THREAD_SAFETY "TS")
+    elseif(PHP_INFO_OUTPUT MATCHES "Thread Safety => disabled")
+      set(PHP_THREAD_SAFETY "NTS")
+    endif()
+    if(PHP_INFO_OUTPUT MATCHES "PHP Extension Build => ([^\r\n]+)")
+      set(PHP_EXTENSION_BUILD "${CMAKE_MATCH_1}")
+    endif()
+  endif()
+  if(PHP_THREAD_SAFETY STREQUAL "NTS")
+    find_library(PHP_LIBRARY NAMES php8 php84 HINTS "${PHP_ROOT}/lib" "${PHP_ROOT}/dev" "${PHP_ROOT}" NO_DEFAULT_PATH)
+    if(NOT PHP_LIBRARY)
+      find_library(PHP_TS_LIBRARY NAMES php8ts php84ts HINTS "${PHP_ROOT}/lib" "${PHP_ROOT}/dev" "${PHP_ROOT}" NO_DEFAULT_PATH)
+      if(PHP_TS_LIBRARY)
+        message(FATAL_ERROR "Runtime PHP is NTS (${PHP_EXTENSION_BUILD}) but PHP_ROOT only provides a TS import library: ${PHP_TS_LIBRARY}. Install the matching NTS PHP development package.")
+      endif()
+    endif()
+  elseif(PHP_THREAD_SAFETY STREQUAL "TS")
+    find_library(PHP_LIBRARY NAMES php8ts php84ts HINTS "${PHP_ROOT}/lib" "${PHP_ROOT}/dev" "${PHP_ROOT}" NO_DEFAULT_PATH)
+    if(NOT PHP_LIBRARY)
+      find_library(PHP_NTS_LIBRARY NAMES php8 php84 HINTS "${PHP_ROOT}/lib" "${PHP_ROOT}/dev" "${PHP_ROOT}" NO_DEFAULT_PATH)
+      if(PHP_NTS_LIBRARY)
+        message(FATAL_ERROR "Runtime PHP is TS (${PHP_EXTENSION_BUILD}) but PHP_ROOT only provides an NTS import library: ${PHP_NTS_LIBRARY}. Install the matching TS PHP development package.")
+      endif()
+    endif()
+  else()
+    find_library(PHP_LIBRARY NAMES php8 php8ts php84 php84ts HINTS "${PHP_ROOT}/lib" "${PHP_ROOT}/dev" "${PHP_ROOT}")
+  endif()
+  if(PHP_ROOT)
+    set(PHP_EXTENSION_DIR "${PHP_ROOT}/ext")
+  endif()
+endif()
+
+include(FindPackageHandleStandardArgs)
+if(WIN32)
+  find_package_handle_standard_args(PHP REQUIRED_VARS PHP_EXECUTABLE PHP_INCLUDE_DIRS PHP_LIBRARY)
+else()
+  find_package_handle_standard_args(PHP REQUIRED_VARS PHP_EXECUTABLE PHP_CONFIG_EXECUTABLE PHP_INCLUDE_DIRS PHP_EXTENSION_DIR)
+endif()
+
+mark_as_advanced(PHP_EXECUTABLE PHP_CONFIG_EXECUTABLE PHP_INCLUDE_DIRS PHP_EXTENSION_DIR PHP_VERSION_NUMBER PHP_LIBRARY PHP_ROOT PHP_THREAD_SAFETY PHP_EXTENSION_BUILD)

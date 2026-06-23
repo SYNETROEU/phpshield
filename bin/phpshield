@@ -1,0 +1,190 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use PhpShield\Compiler\BundleWriter;
+use PhpShield\Compiler\Crypto;
+use PhpShield\Compiler\LaravelProfile;
+use PhpShield\Compiler\LicenseWriter;
+use PhpShield\Compiler\PathPolicy;
+
+spl_autoload_register(function (string $class): void {
+    $prefix = 'PhpShield\\Compiler\\';
+    if (!str_starts_with($class, $prefix)) {
+        return;
+    }
+    $path = __DIR__ . '/../compiler/src/' . substr($class, strlen($prefix)) . '.php';
+    if (is_file($path)) {
+        require $path;
+    }
+});
+
+function out(string $line): void { fwrite(STDOUT, $line . PHP_EOL); }
+function err(string $line): never { fwrite(STDERR, "phpshield: {$line}" . PHP_EOL); exit(1); }
+
+function parse_options(array $args): array {
+    $opts = ['_' => []];
+    for ($i = 0; $i < count($args); $i++) {
+        $arg = $args[$i];
+        if (str_starts_with($arg, '--')) {
+            $eq = strpos($arg, '=');
+            if ($eq === false) {
+                $key = substr($arg, 2);
+                if (isset($args[$i + 1]) && !str_starts_with($args[$i + 1], '--')) {
+                    $opts[$key] = $args[++$i];
+                } else {
+                    $opts[$key] = true;
+                }
+            } else {
+                $key = substr($arg, 2, $eq - 2);
+                $value = substr($arg, $eq + 1);
+                if (isset($opts[$key])) {
+                    $opts[$key] = (array) $opts[$key];
+                    $opts[$key][] = $value;
+                } else {
+                    $opts[$key] = $value;
+                }
+            }
+        } else {
+            $opts['_'][] = $arg;
+        }
+    }
+    return $opts;
+}
+
+$argv = $_SERVER['argv'];
+array_shift($argv);
+$cmd = array_shift($argv) ?? 'help';
+$opts = parse_options($argv);
+
+try {
+    if ($cmd === 'init') {
+        if (!is_dir('tmp') && !mkdir('tmp', 0775, true)) {
+            err('failed to create tmp directory');
+        }
+        $keyFile = 'tmp/master.key';
+        if (!is_file($keyFile)) {
+            file_put_contents($keyFile, Crypto::newMasterKey());
+            chmod($keyFile, 0600);
+        }
+        if (function_exists('sodium_crypto_sign_keypair')) {
+            $signingKey = 'tmp/license.ed25519.sk';
+            $publicKey = 'tmp/license.ed25519.pub';
+            if (!is_file($signingKey) || !is_file($publicKey)) {
+                $pair = sodium_crypto_sign_keypair();
+                file_put_contents($signingKey, sodium_crypto_sign_secretkey($pair));
+                file_put_contents($publicKey, sodium_crypto_sign_publickey($pair));
+                chmod($signingKey, 0600);
+                chmod($publicKey, 0644);
+            }
+        }
+        out("created {$keyFile}");
+        if (is_file('tmp/license.ed25519.pub')) {
+            out("created tmp/license.ed25519.sk");
+            out("created tmp/license.ed25519.pub");
+        }
+        exit(0);
+    }
+
+    if ($cmd === 'encode') {
+        [$source, $output] = $opts['_'] + [null, null];
+        if (!$source || !$output) {
+            err('usage: bin/phpshield encode <source-dir> <output-dir> --key-file <key-file>');
+        }
+        $keyFile = (string)($opts['key-file'] ?? '');
+        if ($keyFile === '' || !is_file($keyFile)) {
+            err('--key-file is required and must exist');
+        }
+        $profile = (string)($opts['profile'] ?? 'default');
+        $excludes = PathPolicy::defaultExcludes();
+        if ($profile === 'laravel') {
+            $excludes = array_values(array_unique(array_merge($excludes, LaravelProfile::excludes())));
+        }
+        foreach ((array)($opts['exclude'] ?? []) as $exclude) {
+            $excludes[] = $exclude;
+        }
+        if (isset($opts['include-vendor'])) {
+            $excludes = array_values(array_filter($excludes, fn($p) => $p !== 'vendor/'));
+        }
+        if (isset($opts['production']) && !isset($opts['require-license'])) {
+            err('--production requires --require-license');
+        }
+        if (isset($opts['production']) && !isset($opts['license-public-key'])) {
+            err('--production requires --license-public-key with a raw Ed25519 public key');
+        }
+        $bundleName = (string)($opts['bundle-name'] ?? 'app.pshield');
+        $writer = new BundleWriter(Crypto::masterKeyFromFile($keyFile));
+        $result = $writer->encodeProject(
+            $source,
+            $output,
+            $bundleName,
+            new PathPolicy($excludes),
+            [
+                'profile' => $profile,
+                'require_license' => isset($opts['require-license']),
+                'product_id' => (string)($opts['product-id'] ?? 'phpshield-demo'),
+                'license_public_key' => isset($opts['license-public-key']) ? (string)$opts['license-public-key'] : null,
+                'execution_strategy' => (string)($opts['execution-strategy'] ?? 'zend_transitional_compile_string'),
+                'production' => isset($opts['production']),
+            ]
+        );
+        out("bundle: {$result['bundle']}");
+        out("protected_php_files: {$result['protected']}");
+        foreach ($result['warnings'] as $warning) {
+            fwrite(STDERR, "warning: {$warning}" . PHP_EOL);
+        }
+        exit(0);
+    }
+
+    if ($cmd === 'inspect' || $cmd === 'verify') {
+        $bundle = $opts['_'][0] ?? null;
+        if (!$bundle || !is_file($bundle)) {
+            err("usage: bin/phpshield {$cmd} <bundle-file>");
+        }
+        $info = BundleWriter::inspect($bundle, $cmd === 'verify');
+        out(json_encode($info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        exit(0);
+    }
+
+    if ($cmd === 'make-license') {
+        $private = (string)($opts['private-key'] ?? '');
+        $out = (string)($opts['out'] ?? '');
+        if ($private === '' || $out === '') {
+            err('usage: bin/phpshield make-license --private-key <key> --out <license>');
+        }
+        $writer = new LicenseWriter($private);
+        $writer->write($out, [
+            'customer_id' => (string)($opts['customer-id'] ?? 'dev-customer'),
+            'product_id' => (string)($opts['product-id'] ?? 'phpshield-demo'),
+            'expires_at' => (string)($opts['expires-at'] ?? gmdate(DATE_ATOM, time() + 86400 * 30)),
+            'not_before' => (string)($opts['not-before'] ?? gmdate(DATE_ATOM, time() - 60)),
+            'allowed_sapis' => explode(',', (string)($opts['allowed-sapis'] ?? 'cli,fpm-fcgi,apache2handler')),
+            'domains' => array_filter(explode(',', (string)($opts['domains'] ?? ''))),
+            'ips' => array_filter(explode(',', (string)($opts['ips'] ?? ''))),
+            'mac_addresses' => array_map('strtolower', array_filter(explode(',', (string)($opts['mac-addresses'] ?? '')))),
+            'machine_fingerprints' => array_filter(explode(',', (string)($opts['machine-fingerprints'] ?? ''))),
+            'features' => array_filter(explode(',', (string)($opts['features'] ?? 'default'))),
+            'min_php_version' => (string)($opts['min-php-version'] ?? '8.4.0'),
+            'max_php_version' => (string)($opts['max-php-version'] ?? '8.5.99'),
+            'offline' => true,
+        ]);
+        out("license: {$out}");
+        exit(0);
+    }
+
+    if ($cmd === 'clean') {
+        $dir = $opts['_'][0] ?? null;
+        if (!$dir) {
+            err('usage: bin/phpshield clean <output-dir>');
+        }
+        BundleWriter::removeTree($dir);
+        out("removed {$dir}");
+        exit(0);
+    }
+
+    out("phpshield 0.1.0");
+    out("commands: init, encode, inspect, verify, make-license, clean");
+    exit($cmd === 'help' ? 0 : 1);
+} catch (Throwable $e) {
+    err($e->getMessage());
+}

@@ -1,0 +1,8 @@
+extension=phpshield.so
+phpshield.bundle=/var/www/app/app.pshield
+phpshield.license=/etc/phpshield/license.pslic
+phpshield.key=
+phpshield.debug=0
+phpshield.allow_dev_eval=0
+phpshield.cache=1
+phpshield.strict=1

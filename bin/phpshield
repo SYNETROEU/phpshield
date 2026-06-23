@@ -109,6 +109,10 @@ try {
         if (isset($opts['include-vendor'])) {
             $excludes = array_values(array_filter($excludes, fn($p) => $p !== 'vendor/'));
         }
+        $includes = [];
+        foreach ((array)($opts['include'] ?? []) as $include) {
+            $includes[] = $include;
+        }
         if (isset($opts['production']) && !isset($opts['require-license'])) {
             err('--production requires --require-license');
         }
@@ -121,7 +125,7 @@ try {
             $source,
             $output,
             $bundleName,
-            new PathPolicy($excludes),
+            new PathPolicy($excludes, $includes),
             [
                 'profile' => $profile,
                 'require_license' => isset($opts['require-license']),

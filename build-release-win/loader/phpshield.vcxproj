@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="18.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A42F1EB2-B55A-34E2-B7D3-449F8D50AD55}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>phpshield</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v145</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\modules\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">phpshield.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">php_phpshield</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\modules\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">phpshield.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">php_phpshield</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\modules\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">phpshield.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">php_phpshield</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\modules\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">phpshield.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">php_phpshield</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.dll</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION="0.1.0";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR="Debug";phpshield_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION=\"0.1.0\";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR=\"Debug\";phpshield_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>C:\PHP\8.5\dev\php8.lib;iphlpapi.lib;advapi32.lib;ws2_32.lib;C:\PHP\libsodium-1.0.22-RELEASE\bin\x64\Release\v145\dynamic\libsodium.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64 /guard:cf</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <ImportLibrary>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/Debug/php_phpshield.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/modules/Debug/php_phpshield.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION="0.1.0";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR="Release";phpshield_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION=\"0.1.0\";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR=\"Release\";phpshield_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>C:\PHP\8.5\dev\php8.lib;iphlpapi.lib;advapi32.lib;ws2_32.lib;C:\PHP\libsodium-1.0.22-RELEASE\bin\x64\Release\v145\dynamic\libsodium.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64 /guard:cf</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <ImportLibrary>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/Release/php_phpshield.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/modules/Release/php_phpshield.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION="0.1.0";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR="MinSizeRel";phpshield_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION=\"0.1.0\";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR=\"MinSizeRel\";phpshield_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>C:\PHP\8.5\dev\php8.lib;iphlpapi.lib;advapi32.lib;ws2_32.lib;C:\PHP\libsodium-1.0.22-RELEASE\bin\x64\Release\v145\dynamic\libsodium.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64 /guard:cf</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <ImportLibrary>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/MinSizeRel/php_phpshield.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/modules/MinSizeRel/php_phpshield.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <CallingConvention></CallingConvention>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <FloatingPointModel></FloatingPointModel>
+      <ForceConformanceInForLoopScope></ForceConformanceInForLoopScope>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MinimalRebuild></MinimalRebuild>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RemoveUnreferencedCodeData></RemoveUnreferencedCodeData>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SupportJustMyCode></SupportJustMyCode>
+      <TreatWChar_tAsBuiltInType></TreatWChar_tAsBuiltInType>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level4</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION="0.1.0";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR="RelWithDebInfo";phpshield_EXPORTS</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;PHP_WIN32;ZEND_WIN32;ZEND_WIN32_FORCE_INLINE;ZEND_ENABLE_STATIC_TSRMLS_CACHE=1;COMPILE_DL_PHPSHIELD;ZEND_DEBUG=0;PHP_SHIELD_VERSION=\"0.1.0\";PHPSHIELD_PRODUCTION=1;PHPSHIELD_HAVE_SODIUM=1;CMAKE_INTDIR=\"RelWithDebInfo\";phpshield_EXPORTS</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\PHP\php-8.5.7-devel-vs17-x64-nts\include;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\main;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\Zend;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\TSRM;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\ext;C:\PHP\php-8.5.7-devel-vs17-x64-nts\include\sapi;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader;C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src;C:\PHP\libsodium-1.0.22-RELEASE\src\libsodium\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalDependencies>C:\PHP\8.5\dev\php8.lib;iphlpapi.lib;advapi32.lib;ws2_32.lib;C:\PHP\libsodium-1.0.22-RELEASE\bin\x64\Release\v145\dynamic\libsodium.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64 /guard:cf</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <ImageHasSafeExceptionHandlers></ImageHasSafeExceptionHandlers>
+      <ImportLibrary>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/RelWithDebInfo/php_phpshield.lib</ImportLibrary>
+      <LinkErrorReporting></LinkErrorReporting>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ProgramDataBaseFile>C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/modules/RelWithDebInfo/php_phpshield.pdb</ProgramDataBaseFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/Users/vilni/Documents/Synetro/encoder/phpshield/loader/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/vilni/Documents/Synetro/encoder/phpshield -BC:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win --check-stamp-file C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-4.4\Modules\FindOpenSSL.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\SelectLibraryConfigurations.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\loader\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/Users/vilni/Documents/Synetro/encoder/phpshield/loader/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/vilni/Documents/Synetro/encoder/phpshield -BC:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win --check-stamp-file C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-4.4\Modules\FindOpenSSL.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\SelectLibraryConfigurations.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\loader\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/Users/vilni/Documents/Synetro/encoder/phpshield/loader/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/vilni/Documents/Synetro/encoder/phpshield -BC:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win --check-stamp-file C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-4.4\Modules\FindOpenSSL.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\SelectLibraryConfigurations.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\loader\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/Users/vilni/Documents/Synetro/encoder/phpshield/loader/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/vilni/Documents/Synetro/encoder/phpshield -BC:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win --check-stamp-file C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-release-win/loader/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-4.4\Modules\FindOpenSSL.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageHandleStandardArgs.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\FindPackageMessage.cmake;C:\Program Files\CMake\share\cmake-4.4\Modules\SelectLibraryConfigurations.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\loader\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\phpshield.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\bundle.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\crypto.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\license.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\manifest.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\ir.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\cache.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\execute.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\pathmap.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\anti_tamper.c" />
+    <ClCompile Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\loader\src\opcode.c" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\vilni\Documents\Synetro\encoder\phpshield\build-release-win\ZERO_CHECK.vcxproj">
+      <Project>{78180D47-B65F-398B-AE49-85875E455445}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

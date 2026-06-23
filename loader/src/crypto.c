@@ -58,6 +58,19 @@ void phpshield_memzero(void *p, size_t n)
 #endif
 }
 
+int phpshield_secure_memcmp(const unsigned char *a, const unsigned char *b, size_t n)
+{
+#ifdef PHPSHIELD_HAVE_SODIUM
+  return sodium_memcmp(a, b, n);
+#else
+  unsigned char diff = 0;
+  for (size_t i = 0; i < n; i++) {
+    diff |= a[i] ^ b[i];
+  }
+  return diff == 0 ? 0 : -1;
+#endif
+}
+
 int phpshield_key_decode(const char *text, unsigned char out[32])
 {
   zend_string *decoded;
@@ -96,7 +109,9 @@ static int hkdf_expand_one(const unsigned char master[32], const char *info, uns
   unsigned int prk_len = 0;
   unsigned char buf[128];
   unsigned int out_len = 0;
+  // HKDF-Extract: PRK = HMAC(salt, IKM) where IKM is master key
   HMAC(EVP_sha256(), hkdf_salt, (int)strlen((const char *)hkdf_salt), master, 32, prk, &prk_len);
+  // HKDF-Expand: OKM = HMAC(PRK, info || 0x01)
   size_t info_len = strlen(info);
   memcpy(buf, info, info_len);
   buf[info_len] = 1;
@@ -106,9 +121,11 @@ static int hkdf_expand_one(const unsigned char master[32], const char *info, uns
 #elif defined(PHPSHIELD_HAVE_SODIUM)
   crypto_auth_hmacsha256_state st;
   unsigned char prk[32];
+  // HKDF-Extract: PRK = HMAC(salt, IKM) 
   crypto_auth_hmacsha256_init(&st, hkdf_salt, strlen((const char *)hkdf_salt));
   crypto_auth_hmacsha256_update(&st, master, 32);
   crypto_auth_hmacsha256_final(&st, prk);
+  // HKDF-Expand: OKM = HMAC(PRK, info || 0x01)
   crypto_auth_hmacsha256_init(&st, prk, 32);
   crypto_auth_hmacsha256_update(&st, (const unsigned char *)info, strlen(info));
   unsigned char one = 1;

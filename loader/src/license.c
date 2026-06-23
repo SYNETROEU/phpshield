@@ -223,7 +223,7 @@ static int verify_development_hmac(phpshield_segment *seg, zend_string *payload_
     zend_string_release(signature);
     return FAILURE;
   }
-  ok = CRYPTO_memcmp(expected, ZSTR_VAL(signature), 32);
+  ok = phpshield_secure_memcmp(expected, (const unsigned char *)ZSTR_VAL(signature), 32);
   phpshield_memzero(expected, sizeof(expected));
   zend_string_release(signature);
   return ok == 0 ? SUCCESS : FAILURE;

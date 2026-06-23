@@ -16,5 +16,6 @@ int phpshield_derive_segment_key(const unsigned char payload_key[32], const char
 int phpshield_manifest_mac(const unsigned char key[32], const unsigned char *data, size_t data_len, unsigned char out[32]);
 int phpshield_decrypt_segment(const char *alg, const unsigned char key[32], const unsigned char *nonce, size_t nonce_len, const unsigned char *tag, size_t tag_len, const unsigned char *ciphertext, size_t ciphertext_len, const char *aad, zend_string **plaintext);
 void phpshield_memzero(void *p, size_t n);
+int phpshield_secure_memcmp(const unsigned char *a, const unsigned char *b, size_t n);
 
 #endif

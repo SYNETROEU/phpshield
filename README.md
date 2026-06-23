@@ -5,7 +5,7 @@
 PHPShield is an open-source alternative to ionCube and SourceGuardian, providing military-grade encryption and bytecode-level protection for your PHP applications.
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-blue.svg)](https://www.php.net/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
 
 ---
@@ -193,13 +193,13 @@ Goes beyond basic debugger detection:
 
 ### Project License
 
-PHPShield itself is **MIT licensed** (open source).
+PHPShield itself is **Apache 2.0 licensed** (open source).
 
 ### For Your Protected Applications
 
 When you use PHPShield to protect your PHP applications:
 
-1. **Encoder** (MIT): You can use freely for any purpose
+1. **Encoder** (Apache 2.0): You can use freely for any purpose
 2. **Loader Extension**: Distribute with your application
 3. **License System**: Enforce your own licensing terms on customers
 

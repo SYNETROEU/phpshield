@@ -184,7 +184,7 @@ PHPShield includes `LaravelProfile` with proper exclusions for cache, config, an
 ## Market Position & Pricing
 
 ### PHPShield
-- **Model**: Open source (MIT license)
+- **Model**: Open source (Apache 2.0 license)
 - **Cost**: Free
 - **Target**: Developers wanting full control + transparency
 - **Revenue**: Optional commercial support, pre-built loaders

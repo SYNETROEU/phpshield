@@ -595,4 +595,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE)
+Apache 2.0 License - see [LICENSE](LICENSE)

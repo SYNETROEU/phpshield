@@ -2,7 +2,7 @@
     "name": "phpshield/phpshield",
     "description": "PHP source code protection system with ionCube-level security",
     "type": "library",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "require": {
         "php": "^8.4",
         "ext-sodium": "*"

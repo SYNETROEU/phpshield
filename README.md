@@ -7,11 +7,12 @@ Open-source PHP 8.4 code protection. Free alternative to ionCube and SourceGuard
 
 ## What it does
 
-- XChaCha20-Poly1305 encryption with authentication
+- XChaCha20-Poly1305 encryption with HMAC-SHA256 integrity verification
+- Selective file protection with `--include` and `--exclude` options
 - Direct opcode execution without reconstructing source
 - Bytecode optimization (constant folding, dead code elimination)
-- PHP 8.4 JIT compatible
-- Anti-debugging (breakpoints, timing, VM detection)
+- PHP 8.4+ JIT compatible
+- Anti-debugging (breakpoints, timing checks)
 - Ed25519-signed licenses with hardware binding
 - Memory-mapped bundles (zero-copy)
 - Works with Laravel, Symfony, WordPress
@@ -63,12 +64,14 @@ php -d extension=build/modules/phpshield.so \
 ## Protection
 
 - Polymorphic encryption (different output each build)
+- HMAC-SHA256 bundle integrity verification
 - Code virtualization with custom VM instructions
 - String encryption (decrypted on-demand)
 - Function name hashing
 - Control flow obfuscation
-- Anti-debugging (breakpoints, timing checks, VM detection)
+- Anti-debugging (breakpoints, timing checks)
 - Runtime integrity checks
+- Selective file protection (`--include`/`--exclude` patterns)
 
 ## Framework support
 

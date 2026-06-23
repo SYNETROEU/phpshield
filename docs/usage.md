@@ -75,6 +75,36 @@ Each protected segment uses a per-file key derived from the bundle payload key
 and the manifest path. The manifest authenticates segment offsets, algorithms,
 hashes, license policy, and key-derivation metadata.
 
+### Selective Protection
+
+Protect only specific files or folders using `--include`:
+
+```powershell
+# Laravel: protect only business logic
+php .\bin\phpshield encode .\laravel-app .\protected `
+  --key-file .\tmp\master.key `
+  --profile=laravel `
+  --include="app/" `
+  --include="routes/" `
+  --include="database/"
+```
+
+Exclude specific patterns:
+
+```powershell
+php .\bin\phpshield encode .\myapp .\protected `
+  --key-file .\tmp\master.key `
+  --exclude="tests/" `
+  --exclude="*.md"
+```
+
+**How it works:**
+- If `--include` is specified, only matching paths are protected (whitelist mode)
+- `--exclude` patterns are applied after includes (blacklist)
+- Multiple `--include` patterns work as OR logic
+- Supports wildcards: `app/*.php`, `app/*/Controller.php`
+- Trailing slash matches directories: `app/`, `vendor/`
+
 ## 4. Make a License
 
 ```powershell

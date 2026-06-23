@@ -186,4 +186,4 @@ Full Laravel 13 app protection:
 - Master key should be stored securely (environment variable, secrets manager)
 - License files are signed with Ed25519, cannot be tampered
 - Bundle integrity verified with HMAC-SHA256 on every load
-- Anti-tamper checks detect debuggers and VM modifications
+- Anti-tamper checks detect debuggers (VM detection disabled in v1.0.0)

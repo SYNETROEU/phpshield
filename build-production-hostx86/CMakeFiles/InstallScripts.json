@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/cmake_install.cmake",
-		"C:/Users/vilni/Documents/Synetro/encoder/phpshield/build-production-hostx86/loader/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

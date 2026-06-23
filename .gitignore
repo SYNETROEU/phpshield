@@ -1,5 +1,8 @@
 build/
 build-debug/
+build-production/
+build-production-hostx86/
+build-production-nmake/
 tmp/
 tests/out/
 tests/tmp/
@@ -9,6 +12,14 @@ tests/tmp/
 *.lo
 *.la
 *.so
+*.dll
+*.lib
+*.exp
+*.obj
+*.obj.d
+*.tlog
+*.recipe
+*.lastbuildstate
 loader/modules/
 loader/.libs/
 loader/Makefile
@@ -16,3 +27,4 @@ loader/config.h
 loader/config.log
 loader/config.status
 loader/autom4te.cache/
+.DS_Store

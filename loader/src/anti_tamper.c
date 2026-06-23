@@ -305,14 +305,17 @@ int phpshield_anti_tamper_check(int debug)
     // Check 8: Extension integrity (detect patching)
     if (phpshield_check_extension_integrity()) flags |= 0x80;
     
-    // Check 9: VM/Container detection (informational) - DISABLED
-    // if (phpshield_check_vm_container()) flags |= 0x100;
+    // Check 9: VM/Container detection (warning only, not fatal)
+    int vm_detected = phpshield_check_vm_container();
+    if (vm_detected && debug) {
+        php_error_docref(NULL, E_NOTICE, "Running in VM/container environment");
+    }
     
     if (flags && debug) {
         php_error_docref(NULL, E_WARNING, 
             "PHPShield anti-tamper check failed (flags: 0x%02x)", flags);
     }
     
-    // Fail on any debugger flags
+    // Fail on any debugger flags (not VM)
     return flags ? FAILURE : SUCCESS;
 }

@@ -11,6 +11,7 @@ set(PHPSHIELD_SOURCES
   src/anti_tamper.c
   src/opcode.c
   src/memcrypt.c
+  src/vm.c
 )
 
 add_library(phpshield MODULE ${PHPSHIELD_SOURCES})

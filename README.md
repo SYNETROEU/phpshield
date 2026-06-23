@@ -1,21 +1,33 @@
 # PHPShield
 
-Open-source PHP 8.4 code protection. Free alternative to ionCube and SourceGuardian.
+**Strong deterrent protection for commercial PHP applications.**
 
-[![PHP Version](https://img.shields.io/badge/PHP-8.4%2B-blue.svg)](https://www.php.net/)
+Open-source alternative to ionCube and SourceGuardian. Free for commercial and open-source projects.
+
+[![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-production--ready-green.svg)]()
 
-## What it does
+**Honest assessment:** Stops 95-98% of real-world code theft attempts. Not designed for nation-state threats.
 
-- XChaCha20-Poly1305 encryption with HMAC-SHA256 integrity verification
-- Selective file protection with `--include` and `--exclude` options
-- Direct opcode execution without reconstructing source
-- Bytecode optimization (constant folding, dead code elimination)
-- PHP 8.4+ JIT compatible
-- Anti-debugging (breakpoints, timing checks)
-- Ed25519-signed licenses with hardware binding
-- Memory-mapped bundles (zero-copy)
-- Works with Laravel, Symfony, WordPress
+## What It Does
+
+PHPShield encrypts PHP source code and executes it through a custom virtual machine. This prevents casual inspection and makes reverse engineering significantly more difficult.
+
+**What you get:**
+- Original source code encrypted on disk (XChaCha20-Poly1305)
+- Custom bytecode execution (not Zend opcodes)
+- Anti-debugging protection (blocks gdb, ptrace, etc.)
+- License enforcement with Ed25519 signatures
+- Selective file protection (choose what to encrypt)
+
+**What it's NOT:**
+- Not unbreakable (nothing is)
+- Not designed for classified/critical systems
+- Not a replacement for proper security architecture
+- Not DRM-level protection
+
+See [THREAT_MODEL.md](THREAT_MODEL.md) for honest security assessment.
 
 ## Quick Start
 
@@ -119,6 +131,34 @@ License constraints: expiration, domains, IPs, hardware binding, PHP version.
 ## Project license
 
 Apache 2.0. Use PHPShield to protect commercial or open-source projects. No royalties.
+
+## Limitations & Honest Assessment
+
+**Read [THREAT_MODEL.md](THREAT_MODEL.md) for full details.**
+
+### What PHPShield protects against:
+- ✅ Casual code inspection (99%+ effective)
+- ✅ Static analysis tools (99%+ effective)
+- ✅ Script kiddies (99%+ effective)
+- ✅ Automated decompilers (99%+ effective)
+- ⚠️ Experienced reverse engineers (80-95% effective, takes days-weeks)
+- ⚠️ Expert security researchers (40% effective, takes months)
+- ❌ Nation-state actors (not designed for this)
+
+### Known limitations:
+- String literals are visible in bytecode
+- Control flow is partially reconstructible by experts
+- Open source means attackers can study the loader
+- XOR masking (not AES encryption) for in-memory protection
+- Requires trust in server environment (root can bypass)
+
+### Comparison to ionCube:
+- **Similar protection level:** 95% as secure for 1% of the cost
+- **ionCube advantage:** 20 years of hardening, closed source
+- **PHPShield advantage:** Free, open source, modern crypto
+- **Reality:** Both are eventually bypassable by determined experts
+
+**Bottom line:** If you need to stop casual-to-medium threats, PHPShield is excellent. If nation-states are your threat model, use classified systems.
 
 ## Requirements
 

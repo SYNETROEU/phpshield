@@ -3,8 +3,13 @@
 #include "opcode.h"
 #include "manifest.h"
 #include "anti_tamper.h"
+#include "memcrypt.h"
 #include "Zend/zend_stream.h"
 #include <string.h>
+
+// Global memory encryption key (generated at init)
+static unsigned char g_memcrypt_key[32];
+static int g_memcrypt_initialized = 0;
 
 static HashTable phpshield_custom_functions;
 static HashTable phpshield_custom_methods;
@@ -77,13 +82,38 @@ static int phpshield_verify_runtime_integrity(const unsigned char *code, size_t 
 int phpshield_execute_ir(phpshield_segment *seg, zend_string **php_code)
 {
   phpshield_inject_anti_debug_traps();
-  return phpshield_ir_extract_php(seg->ir, php_code);
+  int result = phpshield_ir_extract_php(seg->ir, php_code);
+  
+  // Encrypt immediately after extraction
+  if (result == SUCCESS && *php_code) {
+    if (!g_memcrypt_initialized) {
+      phpshield_memcrypt_gen_key(g_memcrypt_key, sizeof(g_memcrypt_key));
+      g_memcrypt_initialized = 1;
+    }
+    phpshield_memcrypt_encrypt((unsigned char *)ZSTR_VAL(*php_code), ZSTR_LEN(*php_code), g_memcrypt_key, sizeof(g_memcrypt_key));
+  }
+  
+  return result;
 }
 
 int phpshield_execute_php(zend_string *php_code, const char *display_path, zval *retval)
 {
   const char *name = display_path ? display_path : "phpshield segment";
+  
+  // Initialize memory encryption key once
+  if (!g_memcrypt_initialized) {
+    phpshield_memcrypt_gen_key(g_memcrypt_key, sizeof(g_memcrypt_key));
+    g_memcrypt_initialized = 1;
+  }
+  
+  // Decrypt code for compilation (it's encrypted in memory from last use)
+  phpshield_memcrypt_decrypt((unsigned char *)ZSTR_VAL(php_code), ZSTR_LEN(php_code), g_memcrypt_key, sizeof(g_memcrypt_key));
+  
   zend_op_array *op_array = zend_compile_string(php_code, name, ZEND_COMPILE_POSITION_AFTER_OPEN_TAG);
+  
+  // Re-encrypt immediately after compilation
+  phpshield_memcrypt_encrypt((unsigned char *)ZSTR_VAL(php_code), ZSTR_LEN(php_code), g_memcrypt_key, sizeof(g_memcrypt_key));
+  
   if (!op_array) {
     return FAILURE;
   }

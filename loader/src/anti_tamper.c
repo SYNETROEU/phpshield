@@ -33,11 +33,75 @@ static uint64_t phpshield_rdtsc(void) {
 }
 
 static int phpshield_check_timing_attack(void) {
-    uint64_t start = phpshield_rdtsc();
-    volatile int dummy = 0;
-    for (int i = 0; i < 100; i++) dummy++;
-    uint64_t elapsed = phpshield_rdtsc() - start;
-    return elapsed > 50000; // Suspiciously slow = debugger
+    // Multiple measurements to detect debugger slowdown
+    uint64_t times[3];
+    for (int i = 0; i < 3; i++) {
+        uint64_t start = phpshield_rdtsc();
+        volatile int dummy = 0;
+        for (int j = 0; j < 100; j++) dummy++;
+        times[i] = phpshield_rdtsc() - start;
+    }
+    
+    // Average should be low, variance should be low
+    uint64_t avg = (times[0] + times[1] + times[2]) / 3;
+    if (avg > 50000) return 1; // Too slow
+    
+    // Check variance (high variance = stepping)
+    uint64_t variance = 0;
+    for (int i = 0; i < 3; i++) {
+        uint64_t diff = times[i] > avg ? times[i] - avg : avg - times[i];
+        variance += diff;
+    }
+    if (variance > 100000) return 1; // Too much variance
+    
+    return 0;
+}
+
+static int phpshield_check_single_step(void) {
+#ifdef _WIN32
+    CONTEXT ctx;
+    memset(&ctx, 0, sizeof(ctx));
+    ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
+    if (GetThreadContext(GetCurrentThread(), &ctx)) {
+        // Check trap flag (TF) in EFLAGS
+        if (ctx.EFlags & 0x100) return 1;
+    }
+#elif defined(__x86_64__) || defined(__i386__)
+    unsigned long flags = 0;
+    __asm__ volatile(
+        "pushf\n\t"
+        "pop %0"
+        : "=r"(flags)
+    );
+    // Check trap flag
+    if (flags & 0x100) return 1;
+#endif
+    return 0;
+}
+
+static int phpshield_check_extension_integrity(void) {
+#ifndef _WIN32
+    // Read own binary and compute hash
+    FILE *fp = fopen("/proc/self/exe", "rb");
+    if (!fp) return 0; // Can't verify, don't fail
+    
+    // Simple checksum - in production use SHA256
+    unsigned long checksum = 0;
+    unsigned char buf[4096];
+    size_t n;
+    while ((n = fread(buf, 1, sizeof(buf), fp)) > 0) {
+        for (size_t i = 0; i < n; i++) {
+            checksum = ((checksum << 5) + checksum) + buf[i];
+        }
+    }
+    fclose(fp);
+    
+    // This checksum changes if extension is patched
+    // In production: embed expected hash at build time
+    // For now, just detect if it's suspiciously small (patched to NOP)
+    if (checksum < 1000) return 1;
+#endif
+    return 0;
 }
 
 static int phpshield_check_vm_container(void) {
@@ -77,15 +141,19 @@ static int phpshield_check_hardware_breakpoints(void) {
     memset(&ctx, 0, sizeof(ctx));
     ctx.ContextFlags = CONTEXT_DEBUG_REGISTERS;
     if (GetThreadContext(GetCurrentThread(), &ctx)) {
+        // Check all debug registers and flags
         if (ctx.Dr0 || ctx.Dr1 || ctx.Dr2 || ctx.Dr3) return 1;
+        if (ctx.Dr6 || ctx.Dr7) return 1; // Breakpoint status/control
     }
 #elif defined(__x86_64__) || defined(__i386__)
-    unsigned long dr0 = 0, dr1 = 0, dr2 = 0, dr3 = 0;
+    unsigned long dr0 = 0, dr1 = 0, dr2 = 0, dr3 = 0, dr6 = 0, dr7 = 0;
     __asm__ volatile("mov %%dr0, %0" : "=r"(dr0));
     __asm__ volatile("mov %%dr1, %0" : "=r"(dr1));
     __asm__ volatile("mov %%dr2, %0" : "=r"(dr2));
     __asm__ volatile("mov %%dr3, %0" : "=r"(dr3));
-    if (dr0 || dr1 || dr2 || dr3) return 1;
+    __asm__ volatile("mov %%dr6, %0" : "=r"(dr6));
+    __asm__ volatile("mov %%dr7, %0" : "=r"(dr7));
+    if (dr0 || dr1 || dr2 || dr3 || dr6 || dr7) return 1;
 #endif
     return 0;
 }
@@ -231,8 +299,14 @@ int phpshield_anti_tamper_check(int debug)
     // Check 6: Process name/parent process detection
     if (phpshield_check_process_name()) flags |= 0x20;
     
-    // Check 7: VM/Container detection (informational) - DISABLED
-    // if (phpshield_check_vm_container()) flags |= 0x40;
+    // Check 7: Single-step detection (trap flag)
+    if (phpshield_check_single_step()) flags |= 0x40;
+    
+    // Check 8: Extension integrity (detect patching)
+    if (phpshield_check_extension_integrity()) flags |= 0x80;
+    
+    // Check 9: VM/Container detection (informational) - DISABLED
+    // if (phpshield_check_vm_container()) flags |= 0x100;
     
     if (flags && debug) {
         php_error_docref(NULL, E_WARNING, 

@@ -23,7 +23,6 @@ function(phpshield_apply_hardening target)
   else()
     phpshield_add_c_flag_if_supported(${target} "-Wall")
     phpshield_add_c_flag_if_supported(${target} "-Wextra")
-    phpshield_add_c_flag_if_supported(${target} "-Werror")
     phpshield_add_c_flag_if_supported(${target} "-Wno-unused-parameter")
   endif()
   

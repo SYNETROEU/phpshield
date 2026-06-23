@@ -30,5 +30,6 @@ zend_string *phpshield_relative_path(const char *stub_path, const char *bundle_p
     return rel;
   }
   efree(bundle);
-  return zend_string_init(stub, strlen(stub), 0);
+  efree(stub);
+  return zend_string_init(stub_path, strlen(stub_path), 0);
 }

@@ -9,6 +9,7 @@ final class SymbolTable
     {
         $symbols = ['classes' => [], 'functions' => [], 'methods' => []];
         $pending = null;
+        $className = null;
         foreach ($tokens as $i => $token) {
             if (!is_array($token)) {
                 continue;
@@ -16,9 +17,16 @@ final class SymbolTable
             if ($token[0] === T_CLASS || $token[0] === T_INTERFACE || $token[0] === T_TRAIT || $token[0] === T_ENUM) {
                 $pending = 'classes';
             } elseif ($token[0] === T_FUNCTION) {
-                $pending = 'functions';
+                $pending = $className !== null ? 'methods' : 'functions';
             } elseif ($pending && $token[0] === T_STRING) {
-                $symbols[$pending][] = $token[1];
+                if ($pending === 'classes') {
+                    $className = $token[1];
+                    $symbols['classes'][] = $token[1];
+                } elseif ($pending === 'methods') {
+                    $symbols['methods'][] = $className . '::' . $token[1];
+                } else {
+                    $symbols[$pending][] = $token[1];
+                }
                 $pending = null;
             }
         }

@@ -11,7 +11,7 @@
 #include <openssl/buffer.h>
 #endif
 
-static const unsigned char hkdf_salt[] = "phpshield-v1";
+static const unsigned char hkdf_salt[] = "PHPShield-v1-HKDF-2024";
 
 void phpshield_memzero(void *p, size_t n)
 {
@@ -45,7 +45,7 @@ int phpshield_key_decode(const char *text, unsigned char out[32])
   decoded = php_base64_decode((unsigned char *)padded, clean_len);
   efree(padded);
   efree(copy);
-  if (!decoded || ZSTR_LEN(decoded) < 32) {
+  if (!decoded || ZSTR_LEN(decoded) != 32) {
     if (decoded) zend_string_release(decoded);
     return FAILURE;
   }

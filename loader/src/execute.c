@@ -1,5 +1,6 @@
 #include "execute.h"
 #include "ir.h"
+#include "opcode.h"
 #include "manifest.h"
 #include "Zend/zend_stream.h"
 #include <string.h>
@@ -38,7 +39,13 @@ int phpshield_execute_php(zend_string *php_code, const char *display_path, zval 
     return FAILURE;
   }
   ZVAL_NULL(retval);
-  zend_execute(op_array, retval);
+  zend_try {
+    zend_execute(op_array, retval);
+  } zend_catch {
+    destroy_op_array(op_array);
+    efree(op_array);
+    zend_bailout();
+  } zend_end_try();
   destroy_op_array(op_array);
   efree(op_array);
   return EG(exception) ? FAILURE : SUCCESS;
@@ -106,7 +113,13 @@ static int custom_require_file(zend_string *path, zval *retval)
     return FAILURE;
   }
   ZVAL_NULL(retval);
-  zend_execute(op_array, retval);
+  zend_try {
+    zend_execute(op_array, retval);
+  } zend_catch {
+    destroy_op_array(op_array);
+    efree(op_array);
+    zend_bailout();
+  } zend_end_try();
   destroy_op_array(op_array);
   efree(op_array);
   return EG(exception) ? FAILURE : SUCCESS;
@@ -264,6 +277,17 @@ int phpshield_execute_segment(phpshield_segment *seg, const char *stub_path, zen
       return FAILURE;
     }
     zend_string_release(php_code);
+    return SUCCESS;
+  }
+  if (strcmp(ZSTR_VAL(strategy_name), "zend_protected_opcode") == 0) {
+    phpshield_opcode_bundle opcode_bundle;
+    zval_ptr_dtor(&doc);
+    if (phpshield_opcode_deserialize(seg->ir, &opcode_bundle) != SUCCESS) return FAILURE;
+    if (phpshield_opcode_execute(&opcode_bundle, stub_path, retval) != SUCCESS) {
+      phpshield_opcode_bundle_free(&opcode_bundle);
+      return FAILURE;
+    }
+    phpshield_opcode_bundle_free(&opcode_bundle);
     return SUCCESS;
   }
   if (strcmp(ZSTR_VAL(strategy_name), "phpshield_custom_ir") == 0) {

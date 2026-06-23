@@ -59,29 +59,32 @@ $opts = parse_options($argv);
 
 try {
     if ($cmd === 'init') {
-        if (!is_dir('tmp') && !mkdir('tmp', 0775, true)) {
-            err('failed to create tmp directory');
+        $tmpDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'phpshield-' . uniqid('', true);
+        if (!mkdir($tmpDir, 0700, true)) {
+            err('failed to create secure tmp directory');
         }
-        $keyFile = 'tmp/master.key';
+        $keyFile = $tmpDir . DIRECTORY_SEPARATOR . 'master.key';
         if (!is_file($keyFile)) {
-            file_put_contents($keyFile, Crypto::newMasterKey());
-            chmod($keyFile, 0600);
+            $oldUmask = umask(0077);
+            file_put_contents($keyFile, Crypto::newMasterKey(), LOCK_EX);
+            umask($oldUmask);
         }
         if (function_exists('sodium_crypto_sign_keypair')) {
-            $signingKey = 'tmp/license.ed25519.sk';
-            $publicKey = 'tmp/license.ed25519.pub';
+            $signingKey = $tmpDir . DIRECTORY_SEPARATOR . 'license.ed25519.sk';
+            $publicKey = $tmpDir . DIRECTORY_SEPARATOR . 'license.ed25519.pub';
             if (!is_file($signingKey) || !is_file($publicKey)) {
                 $pair = sodium_crypto_sign_keypair();
-                file_put_contents($signingKey, sodium_crypto_sign_secretkey($pair));
-                file_put_contents($publicKey, sodium_crypto_sign_publickey($pair));
-                chmod($signingKey, 0600);
+                $oldUmask = umask(0077);
+                file_put_contents($signingKey, sodium_crypto_sign_secretkey($pair), LOCK_EX);
+                umask($oldUmask);
                 chmod($publicKey, 0644);
+                file_put_contents($publicKey, sodium_crypto_sign_publickey($pair), LOCK_EX);
             }
         }
         out("created {$keyFile}");
-        if (is_file('tmp/license.ed25519.pub')) {
-            out("created tmp/license.ed25519.sk");
-            out("created tmp/license.ed25519.pub");
+        if (is_file($tmpDir . DIRECTORY_SEPARATOR . 'license.ed25519.pub')) {
+            out("created {$tmpDir}/license.ed25519.sk");
+            out("created {$tmpDir}/license.ed25519.pub");
         }
         exit(0);
     }

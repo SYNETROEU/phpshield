@@ -2,6 +2,9 @@
 #include "config.h"
 #endif
 
+#ifdef _WIN32
+#include <winsock2.h>
+#endif
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
@@ -56,43 +59,62 @@ PHP_FUNCTION(phpshield_load)
   size_t path_len = 0;
   phpshield_segment seg;
   zval retval;
+  char *real_path = NULL;
 
   ZEND_PARSE_PARAMETERS_START(1, 1)
     Z_PARAM_STRING(path, path_len)
   ZEND_PARSE_PARAMETERS_END();
 
+  real_path = expand_filepath(path, NULL);
+  if (!real_path) {
+    zend_throw_error(NULL, "PHPShield: invalid or non-existent stub path");
+    RETURN_THROWS();
+  }
+  if (php_check_open_basedir(real_path)) {
+    efree(real_path);
+    zend_throw_error(NULL, "PHPShield: stub path violates open_basedir");
+    RETURN_THROWS();
+  }
+
   if (!PHPSHIELD_G(bundle) || strlen(PHPSHIELD_G(bundle)) == 0) {
+    efree(real_path);
     zend_throw_error(NULL, "PHPShield bundle is not configured");
     RETURN_THROWS();
   }
   if (!PHPSHIELD_G(key) || strlen(PHPSHIELD_G(key)) == 0) {
+    efree(real_path);
     zend_throw_error(NULL, "PHPShield key is not configured");
     RETURN_THROWS();
   }
   if (PHPSHIELD_G(strict) && phpshield_anti_tamper_check(PHPSHIELD_G(debug)) != SUCCESS) {
+    efree(real_path);
     zend_throw_error(NULL, PHPSHIELD_G(debug) ? "PHPShield anti-tamper check failed" : "PHPShield load failed");
     RETURN_THROWS();
   }
 
   memset(&seg, 0, sizeof(seg));
-  if (phpshield_bundle_load(path, PHPSHIELD_G(bundle), PHPSHIELD_G(key), PHPSHIELD_G(strict), PHPSHIELD_G(debug), PHPSHIELD_G(cache), &seg) != SUCCESS) {
+  if (phpshield_bundle_load(real_path, PHPSHIELD_G(bundle), PHPSHIELD_G(key), PHPSHIELD_G(strict), PHPSHIELD_G(debug), PHPSHIELD_G(cache), &seg) != SUCCESS) {
+    efree(real_path);
     zend_throw_error(NULL, PHPSHIELD_G(debug) ? "PHPShield failed to verify or decrypt bundle segment" : "PHPShield load failed");
     RETURN_THROWS();
   }
 
   if (phpshield_license_verify(&seg, PHPSHIELD_G(license), PHPSHIELD_G(debug)) != SUCCESS) {
     phpshield_segment_free(&seg);
+    efree(real_path);
     zend_throw_error(NULL, PHPSHIELD_G(debug) ? "PHPShield license verification failed" : "PHPShield license rejected");
     RETURN_THROWS();
   }
 
   ZVAL_UNDEF(&retval);
-  if (phpshield_execute_segment(&seg, path, PHPSHIELD_G(debug), &retval) != SUCCESS) {
+  if (phpshield_execute_segment(&seg, real_path, PHPSHIELD_G(debug), &retval) != SUCCESS) {
     phpshield_segment_free(&seg);
+    efree(real_path);
     zend_throw_error(NULL, PHPSHIELD_G(debug) ? "PHPShield protected execution failed" : "PHPShield execution failed");
     RETURN_THROWS();
   }
   phpshield_segment_free(&seg);
+  efree(real_path);
   RETURN_ZVAL(&retval, 1, 1);
 }
 
@@ -117,6 +139,10 @@ PHP_MINIT_FUNCTION(phpshield)
 {
   REGISTER_INI_ENTRIES();
   phpshield_anti_tamper_init();
+#ifdef _WIN32
+  WSADATA wsa;
+  WSAStartup(MAKEWORD(2, 2), &wsa);
+#endif
   return SUCCESS;
 }
 
@@ -137,6 +163,9 @@ PHP_RSHUTDOWN_FUNCTION(phpshield)
 PHP_MSHUTDOWN_FUNCTION(phpshield)
 {
   UNREGISTER_INI_ENTRIES();
+#ifdef _WIN32
+  WSACleanup();
+#endif
   return SUCCESS;
 }
 

@@ -1,13 +1,16 @@
+# Build artifacts
 build/
 build-debug/
 build-production/
 build-production-hostx86/
 build-production-nmake/
-tmp/
-tests/out/
-tests/tmp/
-*.pshield
-*.pslic
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Compiled binaries
 *.o
 *.lo
 *.la
@@ -20,6 +23,20 @@ tests/tmp/
 *.tlog
 *.recipe
 *.lastbuildstate
+*.pdb
+*.ilk
+
+# PHPShield bundles and licenses
+*.pshield
+*.pslic
+*.key
+
+# Test outputs
+tmp/
+tests/out/
+tests/tmp/
+
+# Loader build artifacts
 loader/modules/
 loader/.libs/
 loader/Makefile
@@ -27,4 +44,42 @@ loader/config.h
 loader/config.log
 loader/config.status
 loader/autom4te.cache/
+
+# Composer
+vendor/
+composer.lock
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Temporary MD files (keep only main docs)
+CODEBASE_ISSUES.md
+FEATURES_COMPLETE.md
+FINAL_STATUS.md
+FIXES_APPLIED.md
+FIXES_SUMMARY.md
+IONCUBE_PARITY_ACHIEVED.md
+IONCUBE_PARITY_STATUS.md
+
+# Agent working directories
+.agents/
+.qwen/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.*.local

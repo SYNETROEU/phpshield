@@ -125,7 +125,7 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   }
 
   manifest_len = ((unsigned char)ZSTR_VAL(bundle)[14] << 24) | ((unsigned char)ZSTR_VAL(bundle)[15] << 16) | ((unsigned char)ZSTR_VAL(bundle)[16] << 8) | (unsigned char)ZSTR_VAL(bundle)[17];
-  if (PHPSHIELD_HEADER_LEN + manifest_len > ZSTR_LEN(bundle)) {
+  if (manifest_len > ZSTR_LEN(bundle) - PHPSHIELD_HEADER_LEN) {
     if (debug) php_error_docref(NULL, E_WARNING, "bundle manifest length exceeds bundle size");
     goto fail;
   }
@@ -170,7 +170,7 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   payload = (const unsigned char *)ZSTR_VAL(bundle) + PHPSHIELD_HEADER_LEN + manifest_len;
   payload_len = ZSTR_LEN(bundle) - PHPSHIELD_HEADER_LEN - manifest_len;
   cipher_hash = phpshield_array_string(Z_ARRVAL_P(seg), "ciphertext_sha256");
-  if (!alg || !key_derivation || strcmp(ZSTR_VAL(key_derivation), "payload-hmac-sha256:path:v2") != 0 || !cipher_hash || !nonce || !tag || offset < 0 || length < 0 || (size_t)offset + (size_t)length > payload_len) {
+  if (!alg || !key_derivation || strcmp(ZSTR_VAL(key_derivation), "payload-hmac-sha256:path:v2") != 0 || !cipher_hash || !nonce || !tag || offset < 0 || length < 0 || (size_t)offset > payload_len || (size_t)length > payload_len - (size_t)offset) {
     if (debug) php_error_docref(NULL, E_WARNING, "bundle segment metadata is invalid");
     zval_ptr_dtor(&manifest);
     goto fail;
@@ -182,7 +182,9 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   }
 
   if (cache) {
-    cache_key = strpprintf(0, "%s:%s:%s", bundle_path, ZSTR_VAL(rel), ZSTR_VAL(cipher_hash));
+    unsigned char key_hash[32];
+    phpshield_manifest_mac(keys.manifest, (const unsigned char*)bundle_path, strlen(bundle_path), key_hash);
+    cache_key = strpprintf(0, "%.16s:%s:%s", key_hash, ZSTR_VAL(rel), ZSTR_VAL(cipher_hash));
     plain = phpshield_cache_get(ZSTR_VAL(cache_key), ZSTR_LEN(cache_key));
   }
   if (!plain) {

@@ -29,6 +29,8 @@ final class BundleWriter
         $analyzer = new Analyzer();
         $symbols = new SymbolTable();
         $obfuscator = new Obfuscator();
+        $nameObfuscator = new NameObfuscator();
+        $cfObfuscator = new ControlFlowObfuscator();
         $ir = new IrBuilder((string)($options['execution_strategy'] ?? 'zend_transitional_compile_string'));
         $warnings = [];
         $segments = [];
@@ -58,7 +60,18 @@ final class BundleWriter
             $parsed = $parser->parse($rel, $source);
             $analysis = $analyzer->analyze($rel, $source);
             array_push($warnings, ...$analysis['warnings']);
+            
+            // Apply obfuscation layers
             $normalized = $obfuscator->renameSafePrivateLocals($source);
+            
+            if (!empty($options['obfuscate_names'])) {
+                $normalized = $nameObfuscator->obfuscate($normalized, $symbols->collect($parsed['tokens']));
+            }
+            
+            if (!empty($options['obfuscate_control_flow'])) {
+                $normalized = $cfObfuscator->obfuscate($normalized);
+            }
+            
             $irPayload = $ir->build($rel, $normalized, $symbols->collect($parsed['tokens']));
             $segmentKey = Crypto::deriveSegmentKey($keys['payload'], $rel);
             $enc = Crypto::encryptSegment($irPayload, $segmentKey, $rel);
@@ -76,7 +89,7 @@ final class BundleWriter
                 'tag' => base64_encode($enc['tag']),
                 'ciphertext_sha256' => Crypto::hash($enc['ciphertext']),
                 'stub_sha256' => Crypto::hash("<?php\nreturn phpshield_load(__FILE__);\n"),
-                'source_sha256' => $parsed['source_sha256'],
+                'source_sha256' => Crypto::hash($normalized),
             ];
             file_put_contents($dest, "<?php\nreturn phpshield_load(__FILE__);\n");
             $protected++;

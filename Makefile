@@ -13,7 +13,7 @@ debug:
 	cmake --build build-debug -j$(JOBS)
 
 test: build
-	PHPSHIELD_EXT=build/modules/phpshield.so tests/run.sh
+	PHPSHIELD_EXT="build/modules/phpshield.so" "tests/run.sh"
 
 example: build
 	bin/phpshield init

@@ -6,7 +6,7 @@ namespace PhpShield\Compiler;
 final class Crypto
 {
     public const VERSION = '0.1.0';
-    private const SALT = 'phpshield-v1';
+    private const SALT = 'PHPShield-v1-HKDF-2024';
 
     public static function newMasterKey(): string
     {

@@ -9,6 +9,7 @@ set(PHPSHIELD_SOURCES
   src/execute.c
   src/pathmap.c
   src/anti_tamper.c
+  src/opcode.c
 )
 
 add_library(phpshield MODULE ${PHPSHIELD_SOURCES})

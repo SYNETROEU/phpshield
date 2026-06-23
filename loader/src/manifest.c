@@ -7,7 +7,7 @@ int phpshield_json_decode_assoc(const char *json, size_t len, zval *out)
   zend_result result;
   ZVAL_NULL(out);
   copy = zend_string_init(json, len, 0);
-  result = php_json_decode_ex(out, ZSTR_VAL(copy), ZSTR_LEN(copy), PHP_JSON_OBJECT_AS_ARRAY, 512);
+  result = php_json_decode_ex(out, ZSTR_VAL(copy), ZSTR_LEN(copy), PHP_JSON_OBJECT_AS_ARRAY, 16);
   zend_string_release(copy);
   return result == SUCCESS && Z_TYPE_P(out) == IS_ARRAY ? SUCCESS : FAILURE;
 }

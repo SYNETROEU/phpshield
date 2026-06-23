@@ -1,0 +1,21 @@
+{
+    "name": "phpshield/phpshield",
+    "description": "PHP source code protection system with ionCube-level security",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "php": "^8.4",
+        "ext-sodium": "*"
+    },
+    "require-dev": {
+        "nikic/php-parser": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PhpShield\\Compiler\\": "compiler/src/"
+        }
+    },
+    "suggest": {
+        "ext-msgpack": "For faster bundle serialization"
+    }
+}

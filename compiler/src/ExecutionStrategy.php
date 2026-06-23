@@ -6,6 +6,7 @@ namespace PhpShield\Compiler;
 final class ExecutionStrategy
 {
     public const ZEND_TRANSITIONAL = 'zend_transitional_compile_string';
+    public const ZEND_OPCODE = 'zend_protected_opcode';
     public const ZEND_OP_ARRAY_FUTURE = 'zend_op_array_protected';
     public const CUSTOM_IR = 'phpshield_custom_ir';
 
@@ -16,15 +17,15 @@ final class ExecutionStrategy
 
     public static function describe(string $strategy): array
     {
-        if (!in_array($strategy, [self::ZEND_TRANSITIONAL, self::ZEND_OP_ARRAY_FUTURE, self::CUSTOM_IR], true)) {
+        if (!in_array($strategy, [self::ZEND_TRANSITIONAL, self::ZEND_OPCODE, self::ZEND_OP_ARRAY_FUTURE, self::CUSTOM_IR], true)) {
             throw new \InvalidArgumentException("unsupported execution strategy: {$strategy}");
         }
         return [
             'name' => $strategy,
-            'production_equivalent_to_opcode_loader' => $strategy !== self::ZEND_TRANSITIONAL,
-            'implemented_in_native_loader' => in_array($strategy, [self::ZEND_TRANSITIONAL, self::CUSTOM_IR], true),
+            'production_equivalent_to_opcode_loader' => !in_array($strategy, [self::ZEND_TRANSITIONAL], true),
+            'implemented_in_native_loader' => in_array($strategy, [self::ZEND_TRANSITIONAL, self::ZEND_OPCODE, self::CUSTOM_IR], true),
             'plaintext_disk_write_allowed' => false,
-            'replaceable_by' => [self::ZEND_OP_ARRAY_FUTURE, self::CUSTOM_IR],
+            'replaceable_by' => [self::ZEND_OPCODE, self::ZEND_OP_ARRAY_FUTURE, self::CUSTOM_IR],
         ];
     }
 }

@@ -67,12 +67,6 @@ static int host_name_matches(zval *domains)
   char host[256];
   char *dot;
   if (!domains || Z_TYPE_P(domains) != IS_ARRAY || zend_hash_num_elements(Z_ARRVAL_P(domains)) == 0) return 1;
-#ifdef _WIN32
-  {
-    WSADATA wsa;
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0) return 0;
-  }
-#endif
   if (gethostname(host, sizeof(host) - 1) != 0) return 0;
   host[sizeof(host) - 1] = '\0';
   lowercase_ascii(host);
@@ -193,6 +187,7 @@ static int machine_fingerprint_matches(zval *allowed)
   if (!allowed || Z_TYPE_P(allowed) != IS_ARRAY || zend_hash_num_elements(Z_ARRVAL_P(allowed)) == 0) return 1;
   if (file_trimmed_equals_any("/etc/machine-id", allowed, 0)) return 1;
   if (file_trimmed_equals_any("/var/lib/dbus/machine-id", allowed, 0)) return 1;
+  if (file_trimmed_equals_any("/var/db/dbus/machine-id", allowed, 0)) return 1;
   return 0;
 #endif
 }
@@ -228,10 +223,7 @@ static int verify_development_hmac(phpshield_segment *seg, zend_string *payload_
     zend_string_release(signature);
     return FAILURE;
   }
-  ok = 0;
-  for (int i = 0; i < 32; i++) {
-    ok |= expected[i] ^ ((unsigned char *)ZSTR_VAL(signature))[i];
-  }
+  ok = CRYPTO_memcmp(expected, ZSTR_VAL(signature), 32);
   phpshield_memzero(expected, sizeof(expected));
   zend_string_release(signature);
   return ok == 0 ? SUCCESS : FAILURE;
@@ -294,11 +286,7 @@ int phpshield_license_verify(phpshield_segment *seg, const char *license_path, z
   if (strcmp(ZSTR_VAL(alg), "Ed25519") == 0) {
     if (verify_ed25519(seg, payload_json, &license) != SUCCESS) goto fail;
   } else if (strcmp(ZSTR_VAL(alg), "HMAC-SHA256-DEVELOPMENT") == 0) {
-#ifdef PHPSHIELD_PRODUCTION
-    goto fail;
-#else
     if (seg->has_license_public_key || verify_development_hmac(seg, payload_json, &license) != SUCCESS) goto fail;
-#endif
   } else {
     goto fail;
   }

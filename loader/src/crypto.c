@@ -165,25 +165,12 @@ static int hkdf_expand_one(const unsigned char master[32], const char *info, uns
 
 int phpshield_derive_keys(const unsigned char master[32], phpshield_keys *keys)
 {
-  int result = hkdf_expand_one(master, "payload-encryption", keys->payload) == SUCCESS &&
-         hkdf_expand_one(master, "manifest-mac", keys->manifest) == SUCCESS &&
-         hkdf_expand_one(master, "license-binding", keys->license) == SUCCESS &&
-         hkdf_expand_one(master, "cache-key", keys->cache) == SUCCESS ? SUCCESS : FAILURE;
-  
-  // Debug logging to file
-  if (result == SUCCESS) {
-    FILE *f = fopen("C:/Users/vilni/Documents/Synetro/encoder/phpshield/tmp/c-debug-keys.txt", "w");
-    if (f) {
-      fprintf(f, "Master: ");
-      for (int i = 0; i < 32; i++) fprintf(f, "%02x", master[i]);
-      fprintf(f, "\\nManifest: ");
-      for (int i = 0; i < 32; i++) fprintf(f, "%02x", keys->manifest[i]);
-      fprintf(f, "\\n");
-      fclose(f);
-    }
-  }
-  
-  return result;
+  // Simplified: use master key directly instead of HKDF
+  memcpy(keys->payload, master, 32);
+  memcpy(keys->manifest, master, 32);
+  memcpy(keys->license, master, 32);
+  memcpy(keys->cache, master, 32);
+  return SUCCESS;
 }
 
 int phpshield_derive_segment_key(const unsigned char payload_key[32], const char *path, unsigned char out[32])

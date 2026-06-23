@@ -78,10 +78,17 @@ int phpshield_key_decode(const char *text, unsigned char out[32])
   size_t len = strlen(copy);
   size_t clean_len;
   char *padded;
+  FILE *fdebug = fopen("C:/Users/vilni/Documents/Synetro/encoder/phpshield/tmp/c-debug-decode.txt", "w");
+  
+  if (fdebug) {
+    fprintf(fdebug, "Input text: %s\\n", text);
+    fprintf(fdebug, "Input len: %zu\\n", len);
+  }
+  
   for (size_t i = 0; i < len; i++) {
     if (copy[i] == '-') copy[i] = '+';
     if (copy[i] == '_') copy[i] = '/';
-    if (copy[i] == '\r' || copy[i] == '\n' || copy[i] == ' ') copy[i] = '\0';
+    if (copy[i] == '\\r' || copy[i] == '\\n' || copy[i] == ' ') copy[i] = '\\0';
   }
   clean_len = strlen(copy);
   padded = emalloc(clean_len + 5);
@@ -89,15 +96,33 @@ int phpshield_key_decode(const char *text, unsigned char out[32])
   while (clean_len % 4 != 0) {
     padded[clean_len++] = '=';
   }
-  padded[clean_len] = '\0';
+  padded[clean_len] = '\\0';
+  
+  if (fdebug) {
+    fprintf(fdebug, "Padded: %s\\n", padded);
+    fprintf(fdebug, "Padded len: %zu\\n", clean_len);
+  }
+  
   decoded = php_base64_decode((unsigned char *)padded, clean_len);
   efree(padded);
   efree(copy);
   if (!decoded || ZSTR_LEN(decoded) != 32) {
+    if (fdebug) {
+      fprintf(fdebug, "Decode failed\\n");
+      fclose(fdebug);
+    }
     if (decoded) zend_string_release(decoded);
     return FAILURE;
   }
   memcpy(out, ZSTR_VAL(decoded), 32);
+  
+  if (fdebug) {
+    fprintf(fdebug, "Decoded: ");
+    for (int i = 0; i < 32; i++) fprintf(fdebug, "%02x", out[i]);
+    fprintf(fdebug, "\\n");
+    fclose(fdebug);
+  }
+  
   zend_string_release(decoded);
   return SUCCESS;
 }
@@ -140,10 +165,25 @@ static int hkdf_expand_one(const unsigned char master[32], const char *info, uns
 
 int phpshield_derive_keys(const unsigned char master[32], phpshield_keys *keys)
 {
-  return hkdf_expand_one(master, "payload-encryption", keys->payload) == SUCCESS &&
+  int result = hkdf_expand_one(master, "payload-encryption", keys->payload) == SUCCESS &&
          hkdf_expand_one(master, "manifest-mac", keys->manifest) == SUCCESS &&
          hkdf_expand_one(master, "license-binding", keys->license) == SUCCESS &&
          hkdf_expand_one(master, "cache-key", keys->cache) == SUCCESS ? SUCCESS : FAILURE;
+  
+  // Debug logging to file
+  if (result == SUCCESS) {
+    FILE *f = fopen("C:/Users/vilni/Documents/Synetro/encoder/phpshield/tmp/c-debug-keys.txt", "w");
+    if (f) {
+      fprintf(f, "Master: ");
+      for (int i = 0; i < 32; i++) fprintf(f, "%02x", master[i]);
+      fprintf(f, "\\nManifest: ");
+      for (int i = 0; i < 32; i++) fprintf(f, "%02x", keys->manifest[i]);
+      fprintf(f, "\\n");
+      fclose(f);
+    }
+  }
+  
+  return result;
 }
 
 int phpshield_derive_segment_key(const unsigned char payload_key[32], const char *path, unsigned char out[32])

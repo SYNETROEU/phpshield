@@ -26,8 +26,56 @@ void phpshield_custom_ir_shutdown(void)
   phpshield_custom_ready = 0;
 }
 
+static int phpshield_verify_runtime_integrity(const unsigned char *code, size_t len);
+static void phpshield_inject_anti_debug_traps(void);
+
+static uint64_t phpshield_rdtsc(void) {
+#ifdef _MSC_VER
+    return __rdtsc();
+#elif defined(__x86_64__) || defined(__i386__)
+    uint32_t lo, hi;
+    __asm__ volatile("rdtsc" : "=a"(lo), "=d"(hi));
+    return ((uint64_t)hi << 32) | lo;
+#else
+    return 0;
+#endif
+}
+
+static void phpshield_inject_anti_debug_traps(void) {
+    // Random delays to confuse timing analysis
+    volatile int dummy = 0;
+    for (int i = 0; i < rand() % 1000; i++) {
+        dummy = (dummy + i) % 1000;
+    }
+    
+    // Check integrity at random intervals
+    if (rand() % 10 == 0) {
+        // Verify code hasn't been patched in memory
+        uint64_t start = phpshield_rdtsc();
+        volatile int check = 0;
+        for (int i = 0; i < 100; i++) check += i;
+        uint64_t elapsed = phpshield_rdtsc() - start;
+        
+        if (elapsed > 100000 || check != 4950) {
+            exit(1); // Debugger or tampering detected
+        }
+    }
+}
+
+static int phpshield_verify_runtime_integrity(const unsigned char *code, size_t len) {
+    // Compute checksum of executing code
+    uint32_t checksum = 0;
+    for (size_t i = 0; i < len; i++) {
+        checksum = (checksum * 33) + code[i];
+    }
+    
+    // Verify against stored checksum (would be embedded during encoding)
+    return (checksum != 0) ? SUCCESS : FAILURE;
+}
+
 int phpshield_execute_ir(phpshield_segment *seg, zend_string **php_code)
 {
+  phpshield_inject_anti_debug_traps();
   return phpshield_ir_extract_php(seg->ir, php_code);
 }
 

@@ -13,6 +13,41 @@
 
 static const unsigned char hkdf_salt[] = "PHPShield-v1-HKDF-2024";
 
+// White-box crypto: Hide key derivation through lookup tables
+static unsigned char wbc_sbox[256];
+static int wbc_initialized = 0;
+
+static void phpshield_init_whitebox(void) {
+    if (wbc_initialized) return;
+    
+    // Initialize S-box with randomized permutation
+    for (int i = 0; i < 256; i++) {
+        wbc_sbox[i] = (unsigned char)i;
+    }
+    
+    // Fisher-Yates shuffle with fixed seed for reproducibility
+    unsigned int seed = 0x12345678;
+    for (int i = 255; i > 0; i--) {
+        seed = seed * 1103515245 + 12345;
+        int j = seed % (i + 1);
+        unsigned char tmp = wbc_sbox[i];
+        wbc_sbox[i] = wbc_sbox[j];
+        wbc_sbox[j] = tmp;
+    }
+    
+    wbc_initialized = 1;
+}
+
+static void phpshield_whitebox_transform(unsigned char *key, size_t len) {
+    phpshield_init_whitebox();
+    
+    // Apply S-box transformation to hide key in memory
+    for (size_t i = 0; i < len; i++) {
+        key[i] = wbc_sbox[key[i]];
+        key[i] ^= (unsigned char)(i & 0xFF); // Position-dependent mixing
+    }
+}
+
 void phpshield_memzero(void *p, size_t n)
 {
 #ifdef PHPSHIELD_HAVE_SODIUM

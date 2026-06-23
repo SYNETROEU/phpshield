@@ -74,6 +74,15 @@ php -d extension=build/modules/phpshield.so \
 
 **Laravel:**
 ```bash
+# Protect only specific folders (recommended for Laravel)
+bin/phpshield encode ./laravel-app ./protected \
+  --key-file master.key \
+  --profile=laravel \
+  --include="app/" \
+  --include="routes/" \
+  --include="database/"
+
+# Or protect everything except config (alternative)
 composer install --no-dev -o -a
 php artisan config:cache && php artisan route:cache && php artisan view:cache
 bin/phpshield encode ./app ./protected --profile=laravel --key-file master.key

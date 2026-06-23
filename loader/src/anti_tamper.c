@@ -152,8 +152,8 @@ int phpshield_anti_tamper_check(int debug)
     // Check 5: LD_PRELOAD hijacking
     if (phpshield_check_ld_preload()) flags |= 0x10;
     
-    // Check 6: VM/Container detection (informational)
-    if (phpshield_check_vm_container()) flags |= 0x20;
+    // Check 6: VM/Container detection (informational) - DISABLED
+    // if (phpshield_check_vm_container()) flags |= 0x20;
     
     if (flags && debug) {
         php_error_docref(NULL, E_WARNING, 

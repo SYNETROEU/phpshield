@@ -95,6 +95,12 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   zend_string *cache_key = NULL;
   unsigned char segment_key[32];
 
+  if (debug) {
+    php_printf("DEBUG: bundle_load starting\n");
+    php_printf("DEBUG: stub=%s\n", stub_path);
+    php_printf("DEBUG: bundle=%s\n", bundle_path);
+  }
+
   if (strict && !stub_is_expected(stub_path)) {
     if (debug) php_error_docref(NULL, E_WARNING, "stub contents did not match expected PHPShield stub");
     return FAILURE;
@@ -131,6 +137,16 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   }
   memcpy(expected_mac, ZSTR_VAL(bundle) + 18, 32);
   manifest_json = (const unsigned char *)ZSTR_VAL(bundle) + PHPSHIELD_HEADER_LEN;
+  
+  if (debug) {
+    char first_bytes[41];
+    snprintf(first_bytes, sizeof(first_bytes), "%.40s", manifest_json);
+    php_error_docref(NULL, E_WARNING, "C: Manifest first bytes: %s", first_bytes);
+    php_error_docref(NULL, E_WARNING, "C: Manifest len: %u", manifest_len);
+    php_error_docref(NULL, E_WARNING, "C: Key bytes: %02x%02x%02x%02x",
+      keys.manifest[0], keys.manifest[1], keys.manifest[2], keys.manifest[3]);
+  }
+  
   if (phpshield_manifest_mac(keys.manifest, manifest_json, manifest_len, actual_mac) != SUCCESS) {
     if (debug) php_error_docref(NULL, E_WARNING, "bundle manifest MAC could not be calculated");
     goto fail;
@@ -146,9 +162,10 @@ int phpshield_bundle_load(const char *stub_path, const char *bundle_path, const 
   }
   
   if (!secure_memcmp32(expected_mac, actual_mac)) {
-    if (debug) php_error_docref(NULL, E_WARNING, "bundle manifest MAC did not match configured key");
+    if (debug) php_error_docref(NULL, E_WARNING, "bundle manifest MAC mismatch");
     goto fail;
   }
+  
   if (phpshield_json_decode_assoc((const char *)manifest_json, manifest_len, &manifest) != SUCCESS) {
     if (debug) php_error_docref(NULL, E_WARNING, "bundle manifest JSON could not be decoded");
     goto fail;

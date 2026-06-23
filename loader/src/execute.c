@@ -306,6 +306,7 @@ int phpshield_execute_segment(phpshield_segment *seg, const char *stub_path, zen
   zend_string *strategy_name = NULL;
 
   if (phpshield_ir_decode(seg->ir, &doc) != SUCCESS) {
+    if (debug) php_error_docref(NULL, E_WARNING, "IR decode failed for %s", stub_path);
     return FAILURE;
   }
   strategy = zend_hash_str_find(Z_ARRVAL(doc), "strategy", strlen("strategy"));
@@ -313,6 +314,7 @@ int phpshield_execute_segment(phpshield_segment *seg, const char *stub_path, zen
     strategy_name = phpshield_array_string(Z_ARRVAL_P(strategy), "name");
   }
   if (!strategy_name) {
+    if (debug) php_error_docref(NULL, E_WARNING, "No strategy found in IR for %s", stub_path);
     zval_ptr_dtor(&doc);
     return FAILURE;
   }

@@ -16,6 +16,8 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/resource.h>
 #endif
 
 static uint64_t phpshield_rdtsc(void) {
@@ -101,6 +103,45 @@ static int phpshield_check_remote_debugger(void) {
     return 0;
 }
 
+static int phpshield_check_process_name(void) {
+#ifndef _WIN32
+    // Check if process name contains debugger strings
+    FILE *fp = fopen("/proc/self/cmdline", "r");
+    if (fp) {
+        char cmdline[1024];
+        size_t len = fread(cmdline, 1, sizeof(cmdline)-1, fp);
+        fclose(fp);
+        cmdline[len] = '\0';
+        
+        const char *debuggers[] = {"gdb", "lldb", "strace", "ltrace", "valgrind", "radare2", NULL};
+        for (int i = 0; debuggers[i]; i++) {
+            if (strstr(cmdline, debuggers[i])) return 1;
+        }
+    }
+    
+    // Check parent process
+    fp = fopen("/proc/self/stat", "r");
+    if (fp) {
+        int ppid = 0;
+        fscanf(fp, "%*d %*s %*c %d", &ppid);
+        fclose(fp);
+        
+        char parent_exe[256];
+        snprintf(parent_exe, sizeof(parent_exe), "/proc/%d/exe", ppid);
+        char link[256];
+        ssize_t len = readlink(parent_exe, link, sizeof(link)-1);
+        if (len > 0) {
+            link[len] = '\0';
+            const char *debuggers[] = {"gdb", "lldb", "strace", "ltrace", NULL};
+            for (int i = 0; debuggers[i]; i++) {
+                if (strstr(link, debuggers[i])) return 1;
+            }
+        }
+    }
+#endif
+    return 0;
+}
+
 static int phpshield_check_ld_preload(void) {
 #ifndef _WIN32
     const char *ld_preload = getenv("LD_PRELOAD");
@@ -112,9 +153,44 @@ static int phpshield_check_ld_preload(void) {
 void phpshield_anti_tamper_init(void)
 {
 #ifndef _WIN32
-    // Anti-ptrace on Linux
+    // Anti-ptrace on Linux - prevents attaching debugger
     ptrace(PTRACE_TRACEME, 0, NULL, NULL);
+    
+    // Block core dumps (prevents memory dumping)
+    struct rlimit rlim;
+    rlim.rlim_cur = 0;
+    rlim.rlim_max = 0;
+    setrlimit(RLIMIT_CORE, &rlim);
 #endif
+}
+
+// Continuous monitoring - call this periodically during execution
+int phpshield_anti_tamper_continuous_check(void)
+{
+#ifndef _WIN32
+    // Quick TracerPid check
+    FILE *fp = fopen("/proc/self/status", "r");
+    if (fp) {
+        char line[256];
+        while (fgets(line, sizeof(line), fp)) {
+            if (strncmp(line, "TracerPid:", 10) == 0) {
+                int pid = 0;
+                sscanf(line + 10, "%d", &pid);
+                fclose(fp);
+                if (pid != 0) {
+                    _exit(1); // Immediate exit, no cleanup
+                }
+                return SUCCESS;
+            }
+        }
+        fclose(fp);
+    }
+#else
+    if (IsDebuggerPresent()) {
+        ExitProcess(1);
+    }
+#endif
+    return SUCCESS;
 }
 
 int phpshield_anti_tamper_check(int debug)
@@ -152,14 +228,17 @@ int phpshield_anti_tamper_check(int debug)
     // Check 5: LD_PRELOAD hijacking
     if (phpshield_check_ld_preload()) flags |= 0x10;
     
-    // Check 6: VM/Container detection (informational) - DISABLED
-    // if (phpshield_check_vm_container()) flags |= 0x20;
+    // Check 6: Process name/parent process detection
+    if (phpshield_check_process_name()) flags |= 0x20;
+    
+    // Check 7: VM/Container detection (informational) - DISABLED
+    // if (phpshield_check_vm_container()) flags |= 0x40;
     
     if (flags && debug) {
         php_error_docref(NULL, E_WARNING, 
             "PHPShield anti-tamper check failed (flags: 0x%02x)", flags);
     }
     
-    // Fail on debugger flags, allow VM/container
-    return (flags & 0x1F) ? FAILURE : SUCCESS;
+    // Fail on any debugger flags
+    return flags ? FAILURE : SUCCESS;
 }

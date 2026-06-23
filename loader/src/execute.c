@@ -2,6 +2,7 @@
 #include "ir.h"
 #include "opcode.h"
 #include "manifest.h"
+#include "anti_tamper.h"
 #include "Zend/zend_stream.h"
 #include <string.h>
 
@@ -86,6 +87,10 @@ int phpshield_execute_php(zend_string *php_code, const char *display_path, zval 
   if (!op_array) {
     return FAILURE;
   }
+  
+  // Anti-debug check before execution
+  phpshield_anti_tamper_continuous_check();
+  
   ZVAL_NULL(retval);
   zend_try {
     zend_execute(op_array, retval);

@@ -3,5 +3,6 @@
 
 void phpshield_anti_tamper_init(void);
 int phpshield_anti_tamper_check(int debug);
+int phpshield_anti_tamper_continuous_check(void);
 
 #endif

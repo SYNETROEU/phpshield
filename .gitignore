@@ -83,3 +83,5 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+
+SECURITY_ARCHITECTURE.md

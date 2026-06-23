@@ -2,7 +2,6 @@
 
 **Version:** 1.0.0  
 **Last Updated:** 2026-06-23  
-**Status:** Production
 
 ---
 
@@ -10,13 +9,13 @@
 
 PHPShield provides **strong deterrent protection** against casual code theft and inspection. It is **not** designed to protect against determined nation-state actors or experts with unlimited resources.
 
-**Realistic assessment:** PHPShield stops 95-98% of real-world attacks. The remaining 2-5% requires significant expertise, time, and motivation.
+**Realistic assessment:** PHPShield stops most real-world attacks. Advanced attackers with significant expertise, time, and motivation can eventually bypass protection.
 
 ---
 
 ## What PHPShield Protects Against
 
-### ✅ HIGH Protection (Stops 99%+ of attempts)
+### ✅ HIGH Protection (Effective Against Most Attacks)
 
 | Threat | Protection | Why It Works |
 |--------|------------|--------------|
@@ -28,7 +27,7 @@ PHPShield provides **strong deterrent protection** against casual code theft and
 | **License tampering** | Ed25519 signatures | Cannot forge without private key |
 | **Bundle modification** | HMAC-SHA256 MAC | Integrity check fails |
 
-### ⚠️ MEDIUM Protection (Stops 80-95% of attempts)
+### ⚠️ MEDIUM Protection (Slows Advanced Attackers)
 
 | Threat | Protection | Limitation |
 |--------|------------|------------|
@@ -38,7 +37,7 @@ PHPShield provides **strong deterrent protection** against casual code theft and
 | **Extension patching** | Self-integrity checks | Source code is public |
 | **Hardware debuggers** | None | Requires physical access |
 
-### ❌ LOW/NO Protection (Advanced Attacks)
+### ❌ LIMITED Protection (Advanced Attacks)
 
 | Threat | Why Limited Protection | Mitigation |
 |--------|------------------------|------------|
@@ -63,7 +62,7 @@ PHPShield provides **strong deterrent protection** against casual code theft and
 4. Google "phpshield crack" → **BLOCKED** (too new, no public exploits)
 5. Try to modify bundle → **BLOCKED** (MAC verification fails)
 
-**Outcome:** Give up after 2-4 hours. **Protection: 99%**
+**Outcome:** Give up after 2-4 hours. **Protection: Highly effective**
 
 **Why they lose:** Can't access code without significant expertise. Easier to build from scratch or buy license.
 
@@ -80,7 +79,7 @@ PHPShield provides **strong deterrent protection** against casual code theft and
 4. Decode custom VM bytecode → **Requires understanding VM interpreter**
 5. Reconstruct high-level logic → **Possible but lossy**
 
-**Outcome:** Can extract **skeleton code** (logic flow, string literals) but **not original PHP**. Takes 40-80 hours of work. **Protection: 85%**
+**Outcome:** Can extract **skeleton code** (logic flow, string literals) but **not original PHP**. Takes 40-80 hours of work. **Protection: Moderately effective**
 
 **What they get:**
 ```php
@@ -112,11 +111,11 @@ if ($var2 == $var3) {
 4. Side-channel analysis
 5. Binary instrumentation
 
-**Outcome:** Can fully extract logic. Takes 200-500 hours of expert time. **Protection: 40%**
+**Outcome:** Can fully extract logic. Takes 200-500 hours of expert time. **Protection: Limited**
 
 **Why limited:** Public source + expert team + unlimited resources = eventually defeatable.
 
-**Mitigation:** These attackers can crack **any** commercial protection including ionCube. This is **not** a realistic threat for most projects.
+**Mitigation:** These attackers can crack **any** code protection system. This is **not** a realistic threat for most projects.
 
 ---
 
@@ -198,16 +197,6 @@ function calculatePrice($base, $tax, $discount) {
 
 ## Comparison to ionCube
 
-| Aspect | PHPShield | ionCube | Reality Check |
-|--------|-----------|---------|---------------|
-| **Casual theft** | ✅ Stops | ✅ Stops | Both effective |
-| **Mid-level RE** | ⚠️ Slows (days) | ⚠️ Slows (weeks) | ionCube slightly better |
-| **Expert RE** | ❌ Bypassable (months) | ❌ Bypassable (months) | Both eventually bypassable |
-| **Source code** | Open | Closed | Doesn't matter for experts |
-| **Cost** | Free | $199-$1999/yr | Major difference |
-
-**Honest conclusion:** ionCube is 10-15% more secure due to 20 years of hardening. PHPShield is 95% as good for <1% of the cost.
-
 ---
 
 ## Known Weaknesses (Responsible Disclosure)
@@ -264,29 +253,29 @@ We document these openly because **security through obscurity is not security**.
 
 ## Threat Actors & Recommended Defenses
 
-### Low-Skill Attackers (95% of threats)
+### Low-Skill Attackers (Most Common)
 **Who:** Competitors, curious developers, script kiddies  
-**PHPShield protection:** ✅ Excellent  
+**PHPShield protection:** ✅ Highly effective  
 **Additional measures:** None needed
 
-### Mid-Skill Attackers (4% of threats)
+### Mid-Skill Attackers (Less Common)
 **Who:** Experienced developers, security enthusiasts  
-**PHPShield protection:** ⚠️ Good (days-to-weeks delay)  
+**PHPShield protection:** ⚠️ Moderately effective (days-to-weeks delay)  
 **Additional measures:**
 - Server-side license validation (phone-home)
 - Obfuscate string literals before encoding
 - Use hardware-bound licenses
 
-### Expert Attackers (1% of threats)
+### Expert Attackers (Rare)
 **Who:** Professional reverse engineers, security firms  
-**PHPShield protection:** ⚠️ Moderate (weeks-to-months delay)  
+**PHPShield protection:** ⚠️ Limited (weeks-to-months delay)  
 **Additional measures:**
 - Legal protection (DMCA, contracts)
 - Watermarking (track leaks)
 - Regular updates (make old cracks obsolete)
 - Accept that perfect protection is impossible
 
-### Nation-State / Advanced Persistent Threats (<0.01%)
+### Nation-State / Advanced Persistent Threats (Extremely Rare)
 **Who:** Government agencies, APT groups  
 **PHPShield protection:** ❌ Minimal  
 **Recommendation:** PHPShield is **not** designed for this threat model. Use classified systems.

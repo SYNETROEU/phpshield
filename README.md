@@ -2,13 +2,13 @@
 
 **Strong deterrent protection for commercial PHP applications.**
 
-Open-source alternative to ionCube and SourceGuardian. Free for commercial and open-source projects.
+Free and open-source PHP code protection system.
 
 [![PHP Version](https://img.shields.io/badge/PHP-8.3%2B-blue.svg)](https://www.php.net/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-production--ready-green.svg)]()
 
-**Honest assessment:** Stops 95-98% of real-world code theft attempts. Not designed for nation-state threats.
+**Honest assessment:** Effective against casual-to-moderate reverse engineering attempts. Not designed for nation-state threats.
 
 ## What It Does
 
@@ -137,12 +137,12 @@ Apache 2.0. Use PHPShield to protect commercial or open-source projects. No roya
 **Read [THREAT_MODEL.md](THREAT_MODEL.md) for full details.**
 
 ### What PHPShield protects against:
-- ✅ Casual code inspection (99%+ effective)
-- ✅ Static analysis tools (99%+ effective)
-- ✅ Script kiddies (99%+ effective)
-- ✅ Automated decompilers (99%+ effective)
-- ⚠️ Experienced reverse engineers (80-95% effective, takes days-weeks)
-- ⚠️ Expert security researchers (40% effective, takes months)
+- ✅ Casual code inspection (highly effective)
+- ✅ Static analysis tools (highly effective)
+- ✅ Script kiddies (highly effective)
+- ✅ Automated decompilers (highly effective)
+- ⚠️ Experienced reverse engineers (moderately effective, takes days-weeks)
+- ⚠️ Expert security researchers (limited effectiveness, takes months)
 - ❌ Nation-state actors (not designed for this)
 
 ### Known limitations:
@@ -152,13 +152,13 @@ Apache 2.0. Use PHPShield to protect commercial or open-source projects. No roya
 - XOR masking (not AES encryption) for in-memory protection
 - Requires trust in server environment (root can bypass)
 
-### Comparison to ionCube:
-- **Similar protection level:** 95% as secure for 1% of the cost
-- **ionCube advantage:** 20 years of hardening, closed source
-- **PHPShield advantage:** Free, open source, modern crypto
-- **Reality:** Both are eventually bypassable by determined experts
+### Reality check:
+- **Strengths:** Free, open source, modern cryptography, custom VM
+- **Trade-offs:** Public source code, XOR-based memory masking
+- **Use case:** Commercial software distribution, license enforcement
+- **Not suitable for:** Classified systems, critical infrastructure
 
-**Bottom line:** If you need to stop casual-to-medium threats, PHPShield is excellent. If nation-states are your threat model, use classified systems.
+**Bottom line:** If you need to deter casual-to-moderate threats, PHPShield is strong. If nation-states are your threat model, use classified systems.
 
 ## Requirements
 
